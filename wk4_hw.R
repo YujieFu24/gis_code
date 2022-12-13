@@ -9,10 +9,14 @@ library(sf)
 library(countrycode)
 library(dplyr)
 library(janitor)
+library(tidyverse)
 
 #read data
-World<-st_read(here::here("hw4","World_Countries__Generalized_.shp")
-HDI <- read_csv(here::here("hw4", "HDR21-22_Composite_indices_complete_time_series.csv"),locale = locale(encoding = "latin1"), na = " ", skip=0)
+World <- st_read("hw4/World_Countries_(Generalized)/World_Countries__Generalized_.shp")
+HDI <- read_csv("hw4/HDR21-22_Composite_indices_complete_time_series.csv",
+                locale = locale(encoding = "latin1"),
+                na = "n/a",
+                skip=0)
 
 #select columns(2019,2010)
 HDI1<-select(HDI, country, hdi_2019, hdi_2010, iso3)
@@ -75,5 +79,15 @@ Join_HDI_FR<-Join_HDI %>%
   filter(aff_iso=="FR")
 Join_HDI_2_FR<-Join_HDI_2 %>%
   filter(aff_iso=="FR")
+
+tmap_mode("plot")
+giimap <- tm_shape(Join_HDI) +
+  tm_polygons("difference",
+              style = "jenks",
+              palette = "RdBu") +
+  tm_layout(main.title = "Change in Gender Inequality Index, 2010 to 2019",
+            main.title.position = "center",
+  )
+giimap
 
                
